@@ -1,0 +1,7 @@
+[
+ {
+   "repository": "asus_kernel_A68",
+   "target_path": "kernel/asus/A68",
+   "branch": "jellybean"
+ }
+]
