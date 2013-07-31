@@ -1,5 +1,5 @@
 # inherit from the proprietary version
--include vendor/asus/A68/BoardConfigVendor.mk
+-include vendor/asus/A68/AndroidBoardVendor.mk
 
 TARGET_GLOBAL_CFLAGS += -mfpu=neon -mfloat-abi=softfp -DQCOM_HARDWARE
 TARGET_GLOBAL_CPPFLAGS += -mfpu=neon -mfloat-abi=softfp -DQCOM_HARDWARE
@@ -49,7 +49,6 @@ TARGET_USERIMAGES_USE_EXT4 := true
 # Misc.
 BOARD_HAS_NO_SELECT_BUTTON := true
 TARGET_USES_SF_BYPASS := true
-
 BOARD_USES_SECURE_SERVICES := true
 BOARD_LIB_DUMPSTATE := libdumpstate.A68
 DEVICE_PACKAGE_OVERLAYS += device/asus/A68/overlay

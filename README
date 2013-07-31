@@ -1,4 +1,6 @@
-Thank you to dangeroustry for making the first CWM for the Padfone 2, i used his device tree as a reference.
+Thank you to dangeroustry for making the first CWM for the Padfone 2, i used his device tree as a reference. https://github.com/dangeroustry/android_device_asus_A68
 
 
-Todo: fix adb in recovery.
+Todo:
+1. Get adb working in recovery
+2. Clean up and remove unnecessary files

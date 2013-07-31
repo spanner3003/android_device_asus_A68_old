@@ -32,4 +32,4 @@ PRODUCT_RESTRICT_VENDOR_FILES := true
 
 # Inherit from hardware-specific part of the product configuration
 $(call inherit-product, device/asus/A68/device.mk)
-$(call inherit-product-if-exists, vendor/asus/A68/A68-vendor.mk)
+$(call inherit-product-if-exists, vendor/asus/A68/AndroidBoardVendor.mk)
