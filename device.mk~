@@ -44,7 +44,7 @@ PRODUCT_COPY_FILES += \
 	device/asus/A68/init.A68.bt.sh:root/init.A68.bt.sh \
 	device/asus/A68/init.recovery.A68.rc:root/init.recovery.A68.rc \
 	device/asus/A68/ueventd.qcom.rc:root/ueventd.qcom.rc \
-	device/asus/A68/adbd:/recovery/root/sbin/adbd
+	device/asus/A68/adbd:root/sbin/adbd
 
 # Prebuilt input device calibration files
 PRODUCT_COPY_FILES += \

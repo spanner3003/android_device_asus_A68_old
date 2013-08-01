@@ -28,7 +28,7 @@ PRODUCT_DEVICE := A68
 PRODUCT_BRAND := Android
 PRODUCT_MODEL := Padfone 2
 PRODUCT_MANUFACTURER := ASUS
-PRODUCT_RESTRICT_VENDOR_FILES := false
+PRODUCT_RESTRICT_VENDOR_FILES := true
 
 # Inherit from hardware-specific part of the product configuration
 $(call inherit-product, device/asus/A68/device.mk)
