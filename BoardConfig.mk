@@ -1,8 +1,11 @@
+LOCAL_PATH := device/asus/A68
+
 # inherit from the proprietary version
 -include vendor/asus/A68/AndroidBoardVendor.mk
 
-TARGET_GLOBAL_CFLAGS += -mfpu=neon -mfloat-abi=softfp -DQCOM_HARDWARE
-TARGET_GLOBAL_CPPFLAGS += -mfpu=neon -mfloat-abi=softfp -DQCOM_HARDWARE
+TARGET_GLOBAL_CFLAGS += -mfpu=neon-vfpv4 -mtune=cortex-a15 -mfloat-abi=softfp
+TARGET_GLOBAL_CPPFLAGS += -mfpu=neon-vfpv4 -mtune=cortex-a15 -mfloat-abi=softfp
+TARGET_EXTRA_CFLAGS := -mtune=cortex-a15 -mcpu=cortex-a15
 
 # Device information
 TARGET_ARCH := arm
@@ -11,11 +14,21 @@ TARGET_CPU_ABI := armeabi-v7a
 TARGET_CPU_ABI2 := armeabi
 TARGET_CPU_SMP := true
 TARGET_ARCH_VARIANT := armv7-a-neon
-TARGET_BOOTLOADER_BOARD_NAME := A68
+TARGET_ARCH_VARIANT_CPU := cortex-a15
+TARGET_BOOTLOADER_BOARD_NAME := APQ8064Pro
+ARCH_ARM_HAVE_ARMV7A := true
 ARCH_ARM_HAVE_TLS_REGISTER := true
 TARGET_BOARD_PLATFORM := msm8960
+TARGET_BOARD_PLATFORM_GPU := qcom-adreno320
 TARGET_CPU_VARIANT := krait
 BOARD_USES_QCOM_HARDWARE := true
+COMMON_GLOBAL_CFLAGS += -DQCOM_HARDWARE
+
+# Compiler Optimizations
+ARCH_ARM_HIGH_OPTIMIZATION := true
+
+# Enable various prefetch optimizations
+COMMON_GLOBAL_CFLAGS += -D__ARM_USE_PLD -D__ARM_CACHE_LINE_SIZE=64 -DNEW_ION_API
 
 # FIXME: HOSTAPD-derived wifi driver
 BOARD_HAS_QCOM_WLAN := true
@@ -34,13 +47,11 @@ BOARD_KERNEL_BASE := 0x80200000
 BOARD_KERNEL_PAGESIZE := 2048
 BOARD_MKBOOTIMG_ARGS := --ramdisk_offset 0x02000000
 TARGET_KERNEL_CONFIG := msm8960-userdebug_defconfig
-TARGET_PREBUILT_KERNEL := device/asus/A68/kernel
+TARGET_PREBUILT_KERNEL := $(LOCAL_PATH)/kernel
 TARGET_KERNEL_SOURCE := kernel/asus/A68
 
 # Radio
 TARGET_NO_RADIO_IMAGE := true
-
-
 
 # Partition sizes | I have double checked these
 BOARD_BOOTIMAGE_PARTITION_SIZE := 16777216 # 16MB
@@ -59,9 +70,11 @@ TARGET_USES_OVERLAY := true
 
 # Display
 USE_OPENGL_RENDERER := true
-BOARD_EGL_CFG := device/asus/A68/egl.cfg
+BOARD_EGL_CFG := $(LOCAL_PATH)/configs/egl.cfg
+TARGET_RECOVERY_FSTAB := $(LOCAL_PATH)/recovery/recovery.fstab
 TARGET_RECOVERY_UI_LIB := librecovery_ui_A68
 TARGET_QCOM_DISPLAY_VARIANT := caf
+TARGET_QCOM_MEDIA_VARIANT := caf
 TARGET_USES_ION := true
 TARGET_USES_C2D_COMPOSITION := true
 TARGET_RECOVERY_PIXEL_FORMAT := "RGBX_8888"
@@ -78,7 +91,7 @@ TARGET_KRAIT_BIONIC_PLDSIZE := 64
 BOARD_HAVE_BLUETOOTH := true
 BOARD_HAVE_BLUETOOTH_QCOM := true
 BLUETOOTH_HCI_USE_MCT := true
-BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := device/asus/A68/bluetooth
+BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := $(LOCAL_PATH)/bluetooth
 
 # Sound/audio
 BOARD_USES_ALSA_AUDIO:= true

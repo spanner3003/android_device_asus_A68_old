@@ -1,14 +1,21 @@
 $(call inherit-product, $(SRC_TARGET_DIR)/product/languages_full.mk)
 
-DEVICE_PACKAGE_OVERLAYS := device/asus/A68/overlay
+# The gps config appropriate for this device
+$(call inherit-product, device/common/gps/gps_us_supl.mk)
+
+LOCAL_PATH := device/asus/A68
+
+DEVICE_PACKAGE_OVERLAYS := $(LOCAL_PATH)/overlay
+
+$(call inherit-product-if-exists, vendor/asus/A68/A68-vendor.mk)
 
 ifeq ($(TARGET_PREBUILT_KERNEL),)
-	LOCAL_KERNEL := device/asus/A68/kernel
+	LOCAL_KERNEL := $(LOCAL_PATH)/kernel
 else
 	LOCAL_KERNEL := $(TARGET_PREBUILT_KERNEL)
 endif
 
-TARGET_PREBUILT_KERNEL := device/asus/A68/kernel
+TARGET_PREBUILT_KERNEL := $(LOCAL_PATH)/kernel
 
 PRODUCT_COPY_FILES += \
     $(LOCAL_KERNEL):kernel
@@ -27,28 +34,51 @@ PRODUCT_PACKAGES += \
         VisualizationWallpapers \
         librs_jni
 
+# Ramdisk and Startup scripts
+PRODUCT_PACKAGES += \
+	fstab.qcom \
+	init.asus.rc \
+	init.asus.sdcard.sh \
+	init.asus.usb.rc \
+	init.qcom.class_core.sh \
+	init.qcom.class_main.sh \
+	init.qcom.sh \
+	init.qcom.rc \
+	init.qcom.usb.sh \
+	init.qcom.usb.rc \
+	init.target.rc \
+	init.trace.rc \
+	init.usb.rc \
+	init.A68.bt.sh \
+	init.recovery.A68.rc \
+	ueventd.qcom.rc
+
+# WiFi
+PRODUCT_PACKAGES += wpa_supplicant.conf
+
 PRODUCT_COPY_FILES += \
-	device/asus/A68/fstab.qcom:root/fstab.qcom \
-	device/asus/A68/init.asus.rc:root/init.asus.rc \
-	device/asus/A68/init.asus.sdcard.sh:root/init.asus.sdcard.sh \
-	device/asus/A68/init.asus.usb.rc:root/init.asus.usb.rc \
-	device/asus/A68/init.qcom.class_core.sh:root/init.qcom.class_core.sh \
-	device/asus/A68/init.qcom.class_main.sh:root/init.qcom.class_main.sh \
-	device/asus/A68/init.qcom.sh:root/init.qcom.sh \
-	device/asus/A68/init.qcom.rc:root/init.qcom.rc \
-	device/asus/A68/init.qcom.usb.sh:root/init.qcom.usb.sh \
-	device/asus/A68/init.qcom.usb.rc:root/init.qcom.usb.rc \
-	device/asus/A68/init.target.rc:root/init.target.rc \
-	device/asus/A68/init.trace.rc:root/init.trace.rc \
-	device/asus/A68/init.usb.rc:root/init.usb.rc \
-	device/asus/A68/init.A68.bt.sh:root/init.A68.bt.sh \
-	device/asus/A68/init.recovery.A68.rc:root/init.recovery.A68.rc \
-	device/asus/A68/ueventd.qcom.rc:root/ueventd.qcom.rc \
-	device/asus/A68/adbd:/recovery/root/sbin/adbd
+	$(LOCAL_PATH)/adbd:/recovery/root/sbin/adbd
+#	$(LOCAL_PATH)/fstab.qcom:root/fstab.qcom \
+#	$(LOCAL_PATH)/init.asus.rc:root/init.asus.rc \
+#	$(LOCAL_PATH)/init.asus.sdcard.sh:root/init.asus.sdcard.sh \
+#	$(LOCAL_PATH)/init.asus.usb.rc:root/init.asus.usb.rc \
+#	$(LOCAL_PATH)/init.qcom.class_core.sh:root/init.qcom.class_core.sh \
+#	$(LOCAL_PATH)/init.qcom.class_main.sh:root/init.qcom.class_main.sh \
+#	$(LOCAL_PATH)/init.qcom.sh:root/init.qcom.sh \
+#	$(LOCAL_PATH)/init.qcom.rc:root/init.qcom.rc \
+#	$(LOCAL_PATH)/init.qcom.usb.sh:root/init.qcom.usb.sh \
+#	$(LOCAL_PATH)/init.qcom.usb.rc:root/init.qcom.usb.rc \
+#	$(LOCAL_PATH)/init.target.rc:root/init.target.rc \
+#	$(LOCAL_PATH)/init.trace.rc:root/init.trace.rc \
+#	$(LOCAL_PATH)/init.usb.rc:root/init.usb.rc \
+#	$(LOCAL_PATH)/init.A68.bt.sh:root/init.A68.bt.sh \
+#	$(LOCAL_PATH)/init.recovery.A68.rc:root/init.recovery.A68.rc \
+#	$(LOCAL_PATH)/ueventd.qcom.rc:root/ueventd.qcom.rc \
+
 
 # Prebuilt input device calibration files
 PRODUCT_COPY_FILES += \
-	device/asus/A68/touch_dev.idc:system/usr/idc/touch_dev.idc
+	$(LOCAL_PATH)/configs/touch_dev.idc:system/usr/idc/touch_dev.idc
 
 # These are the hardware-specific features
 PRODUCT_COPY_FILES += \
@@ -105,6 +135,7 @@ PRODUCT_PACKAGES += \
 	gralloc.msm8960 \
 	copybit.msm8960
 
+# AUDIO
 PRODUCT_PACKAGES += \
 	alsa.msm8960 \
 	audio_policy.msm8960 \
@@ -112,7 +143,8 @@ PRODUCT_PACKAGES += \
 	audio.a2dp.default \
 	audio.usb.default \
 	audio.r_submix.default \
-	libaudio-resampler
+	libaudio-resampler \
+	tnymix
 
 PRODUCT_PACKAGES += \
 	librs_jni \
@@ -122,21 +154,43 @@ PRODUCT_PACKAGES += \
 	hci_qcomm_init
 
 PRODUCT_PACKAGES += \
-	power.msm8960
+	power.qcom
 
 PRODUCT_PROPERTY_OVERRIDES += \
 	ro.qualcomm.bt.hci_transport=smd
 
+# Camera
 PRODUCT_PACKAGES += \
-	mm-vdec-omx-test \
-	mm-venc-omx-test720p \
+	camera.msm8960 \
+	libmmcamera_interface2 \
+	libmmcamera_interface
+
+# OMX
+PRODUCT_PACKAGES += \
 	libdivxdrmdecrypt \
-	libOmxVdec \
-	libOmxVenc \
+	libmm-omxcore \
 	libOmxCore \
 	libstagefrighthw \
+	libOmxVdec \
+	libOmxVenc \
+	libOmxAacEnc \
+	libOmxAmrEnc \
+	libOmxEvrcEnc \
+	libOmxQcelp13Enc \
+	libdashplayer \
 	libc2dcolorconvert
 
+#PRODUCT_PACKAGES += \
+#	mm-vdec-omx-test \
+#	mm-venc-omx-test720p \
+#	libdivxdrmdecrypt \
+#	libOmxVdec \
+#	libOmxVenc \
+#	libOmxCore \
+#	libstagefrighthw \
+#	libc2dcolorconvert
+
+# GPS
 PRODUCT_PACKAGES += \
 	libloc_adapter \
 	libloc_eng \
@@ -144,10 +198,14 @@ PRODUCT_PACKAGES += \
 	libgps.utils \
 	gps.msm8960
 
+# QCOM enhanced A/V
+TARGET_ENABLE_QC_AV_ENHANCEMENTS := true 
+
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
 	rild.libpath=/system/lib/libril-qc-qmi-1.so
 
 $(call inherit-product, frameworks/native/build/phone-xhdpi-2048-dalvik-heap.mk)
+$(call inherit-product, hardware/qcom/msm8960/msm8960.mk)
 
 # $(call inherit-product, build/target/product/full.mk)
 
